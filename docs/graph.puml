@@ -1,0 +1,74 @@
+@startuml sfml_project
+
+!define DARKBLUE
+!includeurl https://raw.githubusercontent.com/Drakemor/RedDress-PlantUML/master/style.puml
+
+
+class SceneNode << Base Class >> extends sf::Transformable, sf::Drawable, sf::NonCopyable
+{
+    Tree class responseible for drawing objects in window
+}
+
+class SpriteNode extends SceneNode
+{
+    Draw simple sprite on window
+}
+
+class Entity extends SceneNode
+{
+    Class give objects ability to move
+}
+
+class Aircraft extends Entity
+{
+    Draw ship sprite on window
+}
+
+class ResourceHolder << typename T >> 
+{
+    Class holds type T resource
+}
+
+class TextureHolder
+{
+    Holds all textures
+}
+
+TextureHolder ..> ResourceHolder
+
+class Game
+{
+    Process inputs, main loop
+}
+
+class World extends sf::NonCopyable
+{
+    Draw all world and update move
+}
+
+TextureHolder --* World
+SceneNode --* World
+
+World --* Game
+
+class Command
+{
+    Store action and category for objects
+}
+
+class CommandQueue
+{
+    Store commands for execution
+}
+
+Command --* CommandQueue
+CommandQueue --* World
+
+class Player
+{
+    Responsible for player inputs and events
+}
+
+Player --* Game
+
+@enduml
