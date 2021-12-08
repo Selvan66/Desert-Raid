@@ -10,7 +10,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
 # Project file
 set(CODE_DIR ${CMAKE_SOURCE_DIR}/code)
-file(GLOB_RECURSE CODE LIST_DIRECTORIES true ${CODE_DIR}/*.cpp ${CODE_DIR}/*.h)                                                                                   
+file(GLOB_RECURSE CODE LIST_DIRECTORIES true ${CODE_DIR}/*.cpp ${CODE_DIR}/*.hpp)  
+include_directories(${CODE_DIR})                                                                               
 
 set(SFML_STATIC_LIBRARIES TRUE)
 add_subdirectory(SFML)

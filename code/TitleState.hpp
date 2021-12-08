@@ -1,6 +1,6 @@
 #pragma once
 
-#include "State.hpp"
+#include "StateStack.hpp"
 #include "Utility.hpp"
 
 class TitleState : public State {
@@ -34,7 +34,7 @@ void TitleState::draw() {
 
 bool TitleState::update(sf::Time dt) {
     mTextEffectTime += dt;
-    if (mTextEffectTime >= sf::second(0.5f)) {
+    if (mTextEffectTime >= sf::seconds(0.5f)) {
         mShowText = !mShowText;
         mTextEffectTime = sf::Time::Zero;
     }
@@ -44,7 +44,7 @@ bool TitleState::update(sf::Time dt) {
 bool TitleState::handleEvent(const sf::Event& event) {
     if (event.type == sf::Event::KeyPressed) {
         requestStackPop();
-        requestStackPus(States::Menu);
+        requestStackPush(States::Menu);
     }
     return true;
 }

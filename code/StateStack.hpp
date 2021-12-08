@@ -1,13 +1,50 @@
 #pragma once
 
-#include "StateIdentifiers.hpp"
+#include "ResourceIdentifiers.hpp"
+#include "Player.hpp"
+
+#include "SFML/Graphics.hpp"
+#include "SFML/Window.hpp"
 
 #include <vector>
 #include <map>
 #include <functional>
+#include <memory>
 
-class State;
-
+class StateStack;
+namespace States {
+    enum ID {
+        None,
+        Title,
+        Menu,
+        Game,
+        Pause
+    };
+}
+class State {
+    public:
+        typedef std::unique_ptr<State> Ptr;
+        struct Context {
+            Context(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts, Player& player);
+            sf::RenderWindow* window;
+            TextureHolder* textures;
+            FontHolder* fonts;
+            Player* player;
+        };
+    public:
+        State(StateStack& stack, Context context);
+        virtual void draw() = 0;
+        virtual bool update(sf::Time dt) = 0;
+        virtual bool handleEvent(const sf::Event& event) = 0;
+    protected:
+        void requestStackPush(States::ID stateID);
+        void requestStackPop();
+        void requestStackClear();
+        Context getContext() const;
+    private:
+        StateStack* mStack;
+        Context mContext;
+};
 class StateStack : private sf::NonCopyable {
     public:
         enum Action {
@@ -22,7 +59,7 @@ class StateStack : private sf::NonCopyable {
         void update(sf::Time dt);
         void draw();
         void handleEvent(const sf::Event& event);
-        void pushState(States::ID);
+        void pushState(States::ID stateID);
         void popState();
         void clearStates();
         bool isEmpty() const;
@@ -42,6 +79,30 @@ class StateStack : private sf::NonCopyable {
         std::map<States::ID, std::function<State::Ptr()>> mFactories;
 };
 
+State::Context::Context(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts, Player& player) 
+: window(&window), textures(&textures), fonts(&fonts), player(&player) {
+}
+
+State::State(StateStack& stack, Context context) 
+: mStack(&stack), mContext(context) {
+}
+
+void State::requestStackPush(States::ID stateID) {
+    mStack->pushState(stateID);
+}
+
+void State::requestStackPop() {
+    mStack->popState();
+}
+
+void State::requestStackClear() {
+    mStack->clearStates();
+}
+
+State::Context State::getContext() const {
+    return mContext;
+}
+
 StateStack::StateStack(State::Context context) 
 : mStack(), mPendingList(), mContext(context), mFactories() {
 }
@@ -54,30 +115,30 @@ void StateStack::registerState(States::ID stateID) {
 }
 
 void StateStack::update(sf::Time dt) {
-    for (auto stack : mStack)
-        if (!stack->handleEvent(event))
+    for (auto it = mStack.rbegin(); it != mStack.rend(); ++it)
+        if (!(*it)->update(dt))
             break;
     applyPendingChanges();
 }
 
 void StateStack::draw() {
-    for (auto stack : mStack)
+    for (auto& stack : mStack)
         stack->draw();
 }
 
 void StateStack::handleEvent(const sf::Event& event) {
-    for (auto stack : mStack)
-        if (!stack->handleEvent(event))
+    for (auto it = mStack.rbegin(); it != mStack.rend(); ++it)
+        if (!(*it)->handleEvent(event))
             break;
     applyPendingChanges();
 }
 
-void StateStack::pushState(States::ID) {
+void StateStack::pushState(States::ID stateID) {
     mPendingList.push_back(PendingChange(Push, stateID));
 }
 
 void StateStack::popState() {
-    mPendingList.push_back(PendingChagne(Pop));
+    mPendingList.push_back(PendingChange(Pop));
 }
 
 void StateStack::clearStates() {
@@ -85,7 +146,7 @@ void StateStack::clearStates() {
 }
 
 bool StateStack::isEmpty() const {
-    return mStack.empty()
+    return mStack.empty();
 }
 
 State::Ptr StateStack::createState(States::ID stateID) {

@@ -1,6 +1,10 @@
 #pragma once
 
-#include "State.hpp"
+#include "StateStack.hpp"
+#include "GameState.hpp"
+#include "TitleState.hpp"
+#include "MenuState.hpp"
+#include "PauseState.hpp"
 
 class Application {
     public:
@@ -20,8 +24,8 @@ class Application {
 };
 
 Application::Application() 
-: mWindow(sf::VieoMode(640, 480), "SFML - game", sf::Style::Close),
-mTextures(), mFonts(), mPlayer(), mStateStack(State::Context(mWindow, mTexture, mFonts, mPlayer)) {   
+: mWindow(sf::VideoMode(640, 480), "SFML - game", sf::Style::Close),
+mTextures(), mFonts(), mPlayer(), mStateStack(State::Context(mWindow, mTextures, mFonts, mPlayer)) {   
     mWindow.setKeyRepeatEnabled(false);
     mFonts.load(Fonts::Sansation, "../assets/Sansation.ttf");
     mTextures.load(Textures::TitleScreen, "../assets/TitleScreen.png");
@@ -52,7 +56,7 @@ void Application::processInput() {
     sf::Event event;
     while (mWindow.pollEvent(event)) {
         mStateStack.handleEvent(event);
-        if (event.type == sf::Event::Close)
+        if (event.type == sf::Event::Closed)
             mWindow.close();
     }
 }
