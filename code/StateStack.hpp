@@ -18,7 +18,8 @@ namespace States {
         Title,
         Menu,
         Game,
-        Pause
+        Pause,
+        Loading
     };
 }
 class State {

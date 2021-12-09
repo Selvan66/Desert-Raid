@@ -66,7 +66,7 @@ bool MenuState::handleEvent(const sf::Event& event) {
     if (event.key.code == sf::Keyboard::Return) {
         if (mOptionIndex == Play) {
             requestStackPop();
-            requestStackPush(States::Game);
+            requestStackPush(States::Loading);
         }
         else {
             requestStackPop();
