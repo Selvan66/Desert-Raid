@@ -1,0 +1,15 @@
+@startuml states
+
+!define DARKBLUE
+!includeurl https://raw.githubusercontent.com/Drakemor/RedDress-PlantUML/master/style.puml
+
+[*] --> TitleState
+TitleState --> MenuState
+MenuState --> LoadingState
+MenuState --> [*]
+LoadingState --> GameState
+GameState --> PauseState
+PauseState --> GameState
+PauseState --> MenuState
+
+@enduml

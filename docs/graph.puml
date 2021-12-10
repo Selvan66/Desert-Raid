@@ -4,71 +4,111 @@
 !includeurl https://raw.githubusercontent.com/Drakemor/RedDress-PlantUML/master/style.puml
 
 
-class SceneNode << Base Class >> extends sf::Transformable, sf::Drawable, sf::NonCopyable
-{
+class SceneNode << Base Class >> {
     Tree class responseible for drawing objects in window
 }
 
-class SpriteNode extends SceneNode
-{
+class SpriteNode extends SceneNode {
     Draw simple sprite on window
 }
 
-class Entity extends SceneNode
-{
+class Entity extends SceneNode {
     Class give objects ability to move
 }
 
-class Aircraft extends Entity
-{
+class Aircraft extends Entity {
     Draw ship sprite on window
 }
 
-class ResourceHolder << typename T >> 
-{
+class ResourceHolder << typename T >> {
     Class holds type T resource
 }
 
-class TextureHolder
-{
+class TextureHolder {
     Holds all textures
 }
 
 TextureHolder ..> ResourceHolder
 
-class Game
-{
+class FontHolder {
+    Holds all fonts
+}
+
+FontHolder ..> ResourceHolder
+
+class Application {
     Process inputs, main loop
 }
 
-class World extends sf::NonCopyable
-{
+class World {
     Draw all world and update move
 }
 
-TextureHolder --* World
 SceneNode --* World
 
-World --* Game
-
-class Command
-{
+class Command {
     Store action and category for objects
 }
 
-class CommandQueue
-{
+class CommandQueue {
     Store commands for execution
 }
 
 Command --* CommandQueue
 CommandQueue --* World
 
-class Player
-{
+class Player {
     Responsible for player inputs and events
 }
 
-Player --* Game
+class StateStack {
+    State machine (stack of states)
+}
+
+StateStack --* Application
+
+class State << Base Class >> {
+    Base class for all states
+}
+
+State --* StateStack
+
+class Context {
+    Contain textures, font, main window and player
+}
+
+Context --* State
+Player --* Context
+TextureHolder --* Context
+FontHolder --* Context
+sf::RenderWindow --* Context
+
+class GameState extends State {
+    Drawing world and player
+}
+
+World --* GameState
+
+class MenuState extends State {
+    Allows to choose what we want to do at start
+}
+
+class TitleState extends State {
+    Open at the start of the game. (Print: "Press any key to start")
+}
+
+class PauseState extends State {
+    Allow pause game while playing
+}
+
+class LoadingState extends State {
+    Allows to load textures
+}
+
+class ParallelTask {
+    Allow to do thing in another thread
+}
+
+ParallelTask --* LoadingState
 
 @enduml
