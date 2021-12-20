@@ -30,6 +30,9 @@ mTextures(), mFonts(), mPlayer(), mStateStack(State::Context(mWindow, mTextures,
     mWindow.setKeyRepeatEnabled(false);
     mFonts.load(Fonts::Sansation, "../assets/Sansation.ttf");
     mTextures.load(Textures::TitleScreen, "../assets/TitleScreen.png");
+    mTextures.load(Textures::ButtonNormal, "../assets/ButtonNormal.png");
+    mTextures.load(Textures::ButtonSelected, "../assets/ButtonSelected.png");
+	mTextures.load(Textures::ButtonPressed,	"../assets/ButtonPressed.png");
     registerStates();
     mStateStack.pushState(States::Title);
 }

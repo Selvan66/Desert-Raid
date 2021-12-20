@@ -74,12 +74,12 @@ void Container::select(std::size_t index) {
             mChildren[mSelectedChild]->deselect();
         }
         mChildren[index]->select();
-        mSelectedChild = index;
+        mSelectedChild = (int)index;
     }
 }
 
 void Container::selectNext() {
-    if (!hasSeletion())
+    if (!hasSelection())
         return;
     int next = mSelectedChild;
     do {
@@ -89,7 +89,7 @@ void Container::selectNext() {
 }
 
 void Container::selectPrevious() {
-    if (!hasSeletion())
+    if (!hasSelection())
         return;
     int prev = mSelectedChild;
     do {
@@ -97,7 +97,5 @@ void Container::selectPrevious() {
     } while(!mChildren[prev]->isSelectable());
     select(prev);
 }
-
-
 
 }

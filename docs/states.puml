@@ -4,10 +4,12 @@
 !includeurl https://raw.githubusercontent.com/Drakemor/RedDress-PlantUML/master/style.puml
 
 [*] --> TitleState
-TitleState --> MenuState
-MenuState --> LoadingState
+TitleState --> LoadingState
+LoadingState --> MenuState
 MenuState --> [*]
-LoadingState --> GameState
+MenuState --> GameState
+MenuState --> SettingsState
+SettingsState --> MenuState
 GameState --> PauseState
 PauseState --> GameState
 PauseState --> MenuState

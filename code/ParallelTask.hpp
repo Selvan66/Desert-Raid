@@ -34,14 +34,14 @@ bool ParallelTask::isFinished() {
 
 float ParallelTask::getCompletion() {
     sf::Lock lock(mMutex);
-    return mElapsedTime.getElapsedTime().asSeconds() / 10.f;
+    return mElapsedTime.getElapsedTime().asSeconds() / 2.f;
 }
 
 void ParallelTask::runTask() {
     bool ended = false;
     while (!ended) {
         sf::Lock lock(mMutex);
-        if (mElapsedTime.getElapsedTime().asSeconds() >= 10.f)
+        if (mElapsedTime.getElapsedTime().asSeconds() >= 2.f)
             ended = true;
     }
     {

@@ -53,7 +53,7 @@ void LoadingState::draw() {
 bool LoadingState::update(sf::Time dt) {
     if (mLoadingTask.isFinished()) {
         requestStackPop();
-        requestStackPush(States::Game);
+        requestStackPush(States::Menu);
     }
     else {
         setCompletion(mLoadingTask.getCompletion());
