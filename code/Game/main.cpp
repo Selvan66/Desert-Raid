@@ -1,4 +1,4 @@
-#include "Application.hpp"
+#include "Game/Application.hpp"
 
 #include <stdexcept>
 #include <iostream>

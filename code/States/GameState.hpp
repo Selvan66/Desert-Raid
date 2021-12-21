@@ -1,8 +1,8 @@
 #pragma once
 
-#include "StateStack.hpp"
-#include "World.hpp"
-#include "Player.hpp"
+#include "States/StateStack.hpp"
+#include "Game/World.hpp"
+#include "Game/Player.hpp"
 
 class GameState : public State {
     public:

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Command.hpp"
+#include "Game/Command.hpp"
 
 #include <queue>
 

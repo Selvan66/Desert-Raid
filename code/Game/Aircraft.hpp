@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Entity.hpp"
-#include "ResourceIdentifiers.hpp"
+#include "Game/Entity.hpp"
+#include "Utils/ResourceIdentifiers.hpp"
 
 class Aircraft : public Entity {
     public:

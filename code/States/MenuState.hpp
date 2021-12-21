@@ -1,9 +1,9 @@
 #pragma once
 
-#include "StateStack.hpp"
-#include "Utility.hpp"
-#include "Button.hpp"
-#include "Container.hpp"
+#include "States/StateStack.hpp"
+#include "Utils/Utility.hpp"
+#include "Components/Button.hpp"
+#include "Components/Container.hpp"
 
 class MenuState : public State {
     public:

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SceneNode.hpp"
+#include "Game/SceneNode.hpp"
 
 class SpriteNode : public SceneNode {
     public:

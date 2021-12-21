@@ -1,9 +1,9 @@
 #pragma once
 
-#include "ResourceIdentifiers.hpp"
-#include "SpriteNode.hpp"
-#include "Aircraft.hpp"
-#include "CommandQueue.hpp"
+#include "Utils/ResourceIdentifiers.hpp"
+#include "Game/SpriteNode.hpp"
+#include "Game/Aircraft.hpp"
+#include "Game/CommandQueue.hpp"
 
 #include <array>
 #include <cmath>

@@ -1,11 +1,11 @@
 #pragma once
 
-#include "StateStack.hpp"
-#include "GameState.hpp"
-#include "TitleState.hpp"
-#include "MenuState.hpp"
-#include "PauseState.hpp"
-#include "LoadingState.hpp"
+#include "States/StateStack.hpp"
+#include "States/GameState.hpp"
+#include "States/TitleState.hpp"
+#include "States/MenuState.hpp"
+#include "States/PauseState.hpp"
+#include "States/LoadingState.hpp"
 
 class Application {
     public:

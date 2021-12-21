@@ -1,7 +1,7 @@
 #pragma once
 
-#include "StateStack.hpp"
-#include "ParallelTask.hpp"
+#include "States/StateStack.hpp"
+#include "States/ParallelTask.hpp"
 
 class LoadingState : public State {
     public:

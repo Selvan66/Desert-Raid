@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ResourceHolder.hpp"
+#include "Utils/ResourceHolder.hpp"
 
 #include <SFML/Graphics.hpp>
 

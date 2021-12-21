@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Component.hpp"
+#include "Components/Component.hpp"
 
 #include <vector>
 #include <memory>

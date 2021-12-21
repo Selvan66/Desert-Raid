@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Component.hpp"
-#include "ResourceIdentifiers.hpp"
-#include "Utility.hpp"
+#include "Components/Component.hpp"
+#include "Utils/ResourceIdentifiers.hpp"
+#include "Utils/Utility.hpp"
 
 #include <functional>
 

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "StateStack.hpp"
-#include "Utility.hpp"
+#include "States/StateStack.hpp"
+#include "Utils/Utility.hpp"
 
 class TitleState : public State {
     public:

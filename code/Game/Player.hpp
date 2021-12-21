@@ -1,7 +1,7 @@
 #pragma once
 
-#include "CommandQueue.hpp"
-#include "Aircraft.hpp"
+#include "Game/CommandQueue.hpp"
+#include "Game/Aircraft.hpp"
 
 #include <SFML/Window.hpp>
 

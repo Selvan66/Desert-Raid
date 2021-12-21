@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Category.hpp"
+#include "Game/Category.hpp"
 
 #include <SFML/System.hpp>
 

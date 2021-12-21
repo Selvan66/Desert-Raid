@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Category.hpp"
-#include "Command.hpp"
+#include "Game/Category.hpp"
+#include "Game/Command.hpp"
 
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>

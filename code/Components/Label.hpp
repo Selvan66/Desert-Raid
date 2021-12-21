@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Container.hpp"
-#include "ResourceIdentifiers.hpp"
+#include "Components/Container.hpp"
+#include "Utils/ResourceIdentifiers.hpp"
 
 #include <string>
 

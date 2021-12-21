@@ -1,7 +1,7 @@
 #pragma once
 
-#include "ResourceIdentifiers.hpp"
-#include "Player.hpp"
+#include "Utils/ResourceIdentifiers.hpp"
+#include "Game/Player.hpp"
 
 #include "SFML/Graphics.hpp"
 #include "SFML/Window.hpp"
