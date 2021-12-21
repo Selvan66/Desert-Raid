@@ -93,7 +93,7 @@ void Container::selectPrevious() {
         return;
     int prev = mSelectedChild;
     do {
-        prev = (prev + 1) % mChildren.size();
+        prev = (prev + (mChildren.size() - 1)) % mChildren.size();
     } while(!mChildren[prev]->isSelectable());
     select(prev);
 }

@@ -6,6 +6,7 @@
 #include "States/MenuState.hpp"
 #include "States/PauseState.hpp"
 #include "States/LoadingState.hpp"
+#include "States/SettingsState.hpp"
 
 class Application {
     public:
@@ -82,4 +83,5 @@ void Application::registerStates() {
     mStateStack.registerState<GameState>(States::Game);
     mStateStack.registerState<PauseState>(States::Pause);
     mStateStack.registerState<LoadingState>(States::Loading);
+    mStateStack.registerState<SettingsState>(States::Settings);
 }

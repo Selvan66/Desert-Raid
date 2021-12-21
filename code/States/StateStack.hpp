@@ -19,7 +19,8 @@ namespace States {
         Menu,
         Game,
         Pause,
-        Loading
+        Loading,
+        Settings
     };
 }
 class State {

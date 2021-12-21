@@ -10,7 +10,7 @@ class Label : public Component {
     public:
         typedef std::shared_ptr<Label> Ptr;
     public:
-        Label(std::string& text, const FontHolder& fonts);
+        Label(const std::string& text, const FontHolder& fonts);
         virtual bool isSelectable() const;
         void setText(const std::string& text);
         virtual void handleEvent(const sf::Event& event);
@@ -20,7 +20,7 @@ class Label : public Component {
         sf::Text mText;
 };
 
-Label::Label(std::string& text, const FontHolder& fonts) 
+Label::Label(const std::string& text, const FontHolder& fonts) 
 : mText(text, fonts.get(Fonts::Sansation), 16) {
 }
 
