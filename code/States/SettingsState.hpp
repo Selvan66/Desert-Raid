@@ -59,7 +59,7 @@ bool SettingsState::handleEvent(const sf::Event& event) {
     for (std::size_t action = 0; action < Player::ActionCount; ++action) {
         if (mBindingButtons[action]->isActive()) {
             isKeyBinding = true;
-            if (event.type == sf::Event::KeyReleased) {
+            if (event.type == sf::Event::KeyPressed) {
                 State::getContext().player->assignKey(static_cast<Player::Action>(action), event.key.code);
                 mBindingButtons[action]->deactivate();
             }

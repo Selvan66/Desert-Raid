@@ -43,7 +43,7 @@ void Container::handleEvent(const sf::Event& event) {
     if (hasSelection() && mChildren[mSelectedChild]->isActive()) {
         mChildren[mSelectedChild]->handleEvent(event);
     }
-    else if (event.type == sf::Event::KeyReleased) {
+    else if (event.type == sf::Event::KeyPressed) {
         if (event.key.code == sf::Keyboard::W || event.key.code == sf::Keyboard::Up) {
             selectPrevious();
         }
@@ -93,7 +93,7 @@ void Container::selectPrevious() {
         return;
     int prev = mSelectedChild;
     do {
-        prev = (prev + (mChildren.size() - 1)) % mChildren.size();
+        prev = (prev + (mChildren.size() - 1)) % (int)mChildren.size();
     } while(!mChildren[prev]->isSelectable());
     select(prev);
 }

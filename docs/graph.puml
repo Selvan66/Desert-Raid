@@ -101,6 +101,10 @@ class PauseState extends State {
     Allow pause game while playing
 }
 
+class SettingsState extends State {
+    Allow to change move set
+}
+
 class LoadingState extends State {
     Allows to load textures
 }
@@ -110,5 +114,24 @@ class ParallelTask {
 }
 
 ParallelTask --* LoadingState
+
+class Component << Base Class >> {
+    GUI component for player used
+}
+
+class Label extends Component {
+    Contain text
+}
+
+class Button extends Component {
+    Button
+}
+
+class Container extends Component {
+    Grupe components
+}
+
+Container --* MenuState
+Container --* SettingsState
 
 @enduml

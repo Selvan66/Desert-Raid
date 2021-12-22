@@ -44,7 +44,7 @@ bool TitleState::update(sf::Time dt) {
 bool TitleState::handleEvent(const sf::Event& event) {
     if (event.type == sf::Event::KeyPressed) {
         requestStackPop();
-        requestStackPush(States::Loading);
+        requestStackPush(States::Menu);
     }
     return true;
 }
