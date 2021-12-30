@@ -15,6 +15,7 @@ namespace Textures {
         HealthRefill,
         MissileRefill,
         FireSpread,
+        FireRate,
         TitleScreen,
         ButtonNormal, 
         ButtonSelected,
