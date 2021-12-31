@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Game/Entity.hpp"
-#include "Game/TextNode.hpp"
+#include "Objects/Entity.hpp"
+#include "Objects/TextNode.hpp"
 #include "Utils/ResourceIdentifiers.hpp"
 #include "Utils/Utility.hpp"
 

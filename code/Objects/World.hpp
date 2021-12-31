@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Utils/ResourceIdentifiers.hpp"
-#include "Game/SpriteNode.hpp"
-#include "Game/Aircraft.hpp"
+#include "Objects/SpriteNode.hpp"
+#include "Objects/Aircraft.hpp"
 #include "Game/CommandQueue.hpp"
 
 #include <array>

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "States/StateStack.hpp"
-#include "Game/World.hpp"
+#include "Objects/World.hpp"
 #include "Game/Player.hpp"
 
 class GameState : public State {

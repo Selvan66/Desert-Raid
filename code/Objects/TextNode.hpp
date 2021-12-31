@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Game/SceneNode.hpp"
+#include "Objects/SceneNode.hpp"
 #include "Utils/ResourceIdentifiers.hpp"
 #include "Utils/Utility.hpp"
 
