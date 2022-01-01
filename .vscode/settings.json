@@ -1,0 +1,6 @@
+{
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    "editor.quickSuggestions": false,
+    "C_Cpp.errorSquiggles": "Disabled",
+    "C_Cpp.default.includePath": ["${workspaceFolder}/code"],
+}
