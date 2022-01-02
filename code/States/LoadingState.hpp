@@ -25,7 +25,7 @@ LoadingState::LoadingState(StateStack& stack, Context context)
 
     mLoadingText.setFont(font);
     mLoadingText.setString("Loading Resources");
-    centerOrigin(mLoadingText);
+    Utility::centerOrigin(mLoadingText);
     mLoadingText.setPosition(viewSize.x / 2.f, viewSize.y / 2.f + 50.f);
 
     mProgressBarBackground.setFillColor(sf::Color::White);

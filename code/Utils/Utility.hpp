@@ -20,6 +20,8 @@ namespace
 	auto RandomEngine = createRandomEngine();
 }
 
+namespace Utility {
+
 std::string toString(sf::Keyboard::Key key)
 {
 	#define BOOK_KEYTOSTRING_CASE(KEY) case sf::Keyboard::KEY: return #KEY;
@@ -163,4 +165,6 @@ float length(sf::Vector2f vector) {
 sf::Vector2f unitVector(sf::Vector2f vector) {
 	assert(vector != sf::Vector2f(0.f, 0.f));
 	return vector / length(vector);
+}
+
 }

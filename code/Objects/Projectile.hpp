@@ -63,12 +63,12 @@ std::vector<ProjectileData> initializeProjectileData() {
 
 Projectile::Projectile(Type type, const TextureHolder& texutres) 
 : Entity(1), mType(type), mSprite(textures.get(Table[type].texture)), mTargetDirection() {
-    centerOrigin(mSprite);
+    Utility::centerOrigin(mSprite);
 }
 
 void Projectile::guideTowards(sf::Vector2f position) {
     assert(isGuided());
-    mTargetDirection = unitVector(position - SceneNode::getWorldPosition());
+    mTargetDirection = Utility::unitVector(position - SceneNode::getWorldPosition());
 }
 
 bool Projectile::isGuided() const {
@@ -100,11 +100,11 @@ void Projectile::updateCurrent(sf::Time dt, CommandQueue& commands) {
     if (isGuided()) {
         const float approachRate = 200.f;
 
-        sf::Vector2f newVelocity = unitVector(approachRate * dt.asSeconds() * mTargetDirection + Entity::getVelocity());
+        sf::Vector2f newVelocity = Utility::unitVector(approachRate * dt.asSeconds() * mTargetDirection + Entity::getVelocity());
         newVelocity *= getMaxSpeed();
         float angle = std::atan2(newVelocity.y, newVelocity.x);
 
-        Transformable::setRotation(toDegree(angle) + 90.f);
+        Transformable::setRotation(Utility::toDegree(angle) + 90.f);
         Entity::setVelocity(newVelocity);
     }
 

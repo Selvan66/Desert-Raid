@@ -81,7 +81,7 @@ void SettingsState::updateLabels() {
     Player& player = *State::getContext().player;
     for (std::size_t i = 0; i < Player::ActionCount; ++i) {
         sf::Keyboard::Key key = player.getAssignKey(static_cast<Player::Action>(i));
-        mBindingLabels[i]->setText(toString(key));
+        mBindingLabels[i]->setText(Utility::toString(key));
     }
 }
 

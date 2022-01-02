@@ -49,7 +49,7 @@ void Button::setCallback(Callback callback) {
 
 void Button::setText(const std::string& text) {
     mText.setString(text);
-    centerOrigin(mText);
+    Utility::centerOrigin(mText);
 }
 
 void Button::setToggle(bool flag) {

@@ -124,7 +124,7 @@ Aircraft::Aircraft(Type type, const TextureHolder& textures, const FontHolder& f
 mFireCommand(), mMissileCommand(), mFireCountdown(sf::Time::Zero), mIsFiring(false), mIsLaunchingMissile(false),
 mIsMarkedForRemoval(false), mFireRateLevel(1), mSpreadLevel(1), mMissileAmmo(2), mDropPickipCommand(), 
 mTravelledDistance(0.f), mDirectionIndex(0), mHealthDisplay(nullptr), mMissileDisplay(nullptr) {
-    centerOrigin(mSprite);
+    Utility::centerOrigin(mSprite);
     mFireCommand.category = Category::SceneAirLayer;
     mFireCommand.action = [this, &texures] (SceneNode& node, sf::Time) {
         createBullets(node, textures);
@@ -233,7 +233,7 @@ void Aircraft::updateMovementPattern(sf::Time dt) {
             mTravelledDistance = 0.f;
         }
 
-        float radians = toRadian(directions[mDirectionIndex].angle + 90.f);
+        float radians = Utility::toRadian(directions[mDirectionIndex].angle + 90.f);
         float vx = getMaxSpeed() * std::cos(radians);
         float vy = getMaxSpeed() * std::sin(radians);
 
@@ -243,7 +243,7 @@ void Aircraft::updateMovementPattern(sf::Time dt) {
 }
 
 void Aircraft::checkPickupDrop(CommandQueue& commands) {
-    if ((!isAllied()) && (randomInt(3) == 0)) {
+    if ((!isAllied()) && (Utility::randomInt(3) == 0)) {
         command.push(mDropPickupCommand);
     }
 }
@@ -301,7 +301,7 @@ void Aircraft::createProjectile(SceneNode& node, Projectile::Type type, float xO
 }
 
 void Aircraft::createPickup(SceneNode& node, const TextureHolder& textures) const {
-    auto type = static_cast<Pickup::Type>(randomInt(Pickup::TypeCount));
+    auto type = static_cast<Pickup::Type>(Utility::randomInt(Pickup::TypeCount));
 
     std::unique_ptr<Pickup> pickup(new Pickup(type, textures));
     pickup->setPosition(SceneNode::getWorldPosition());

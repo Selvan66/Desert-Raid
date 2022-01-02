@@ -26,7 +26,7 @@ void TextNode::setString(const std::string& text) {
 
 void TextNode::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const {
     mText.setString(text);
-    centerOrigin(mText);
+    Utility::centerOrigin(mText);
 }
 
 
