@@ -7,6 +7,7 @@
 #include "States/PauseState.hpp"
 #include "States/LoadingState.hpp"
 #include "States/SettingsState.hpp"
+#include "States/GameOverState.hpp"
 
 class Application {
     public:
@@ -84,4 +85,5 @@ void Application::registerStates() {
     mStateStack.registerState<PauseState>(States::Pause);
     mStateStack.registerState<LoadingState>(States::Loading);
     mStateStack.registerState<SettingsState>(States::Settings);
+    mStateStack.registerState<GameOverState>(States::GameOver);
 }

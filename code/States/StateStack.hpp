@@ -20,7 +20,8 @@ namespace States {
         Game,
         Pause,
         Loading,
-        Settings
+        Settings,
+        GameOver
     };
 }
 class State {
