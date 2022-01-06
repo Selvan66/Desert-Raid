@@ -27,7 +27,7 @@ class Projectile : public Entity {
             TypeCount
         };
     public:
-        Projectile(Type type, const TextureHolder& texutres);
+        Projectile(Type type, const TextureHolder& textures);
         void guideTowards(sf::Vector2f position);
         bool isGuided() const;
         virtual unsigned int getCategory() const;
@@ -61,7 +61,7 @@ std::vector<ProjectileData> initializeProjectileData() {
     return data;
 }
 
-Projectile::Projectile(Type type, const TextureHolder& texutres) 
+Projectile::Projectile(Type type, const TextureHolder& textures) 
 : Entity(1), mType(type), mSprite(textures.get(Table[type].texture)), mTargetDirection() {
     Utility::centerOrigin(mSprite);
 }

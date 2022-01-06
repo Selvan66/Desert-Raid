@@ -12,7 +12,7 @@ class GameOverState : public State {
         virtual bool handleEvent(const sf::Event& event);
     private:
         sf::Text mGameOverText;
-        sf::Text mElapsedTime;
+        sf::Time mElapsedTime;
 };
 
 GameOverState::GameOverState(StateStack& stack, Context context) 
@@ -20,7 +20,7 @@ GameOverState::GameOverState(StateStack& stack, Context context)
     sf::Font& font = context.fonts->get(Fonts::Sansation);
     sf::Vector2f windowSize(context.window->getSize());
     mGameOverText.setFont(font);
-    if (context.player->getMissionStatus() == Player::MissionFailuer) {
+    if (context.player->getMissionStatus() == Player::MissionFailure) {
         mGameOverText.setString("Mission failed!");
     }
     else {
@@ -28,7 +28,7 @@ GameOverState::GameOverState(StateStack& stack, Context context)
     }
 
     mGameOverText.setCharacterSize(70);
-    centerOrigin(mGameOverText);
+    Utility::centerOrigin(mGameOverText);
     mGameOverText.setPosition(0.5f * windowSize.x, 0.4f * windowSize.y);
 }
 
@@ -47,7 +47,7 @@ void GameOverState::draw() {
 bool GameOverState::update(sf::Time dt) {
     mElapsedTime += dt;
     if (mElapsedTime > sf::seconds(3)) {
-        requestStateClear();
+        requestStackClear();
         requestStackPush(States::Menu);
     }
     return false;

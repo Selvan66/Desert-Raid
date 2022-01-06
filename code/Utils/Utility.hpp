@@ -146,15 +146,15 @@ void centerOrigin(sf::Text& text) {
 }
 
 float toDegree(float radian) {
-	return 180.f / PI * radian;
+	return 180.f / (float)PI * radian;
 }
 
 float toRadian(float degree) {
-	return PI / 180.f * degree;
+	return (float)PI / 180.f * degree;
 }
 
 int randomInt(int exclusiveMax) {
-	std::uniform_int_distribution<> distr(0, exlusiveMax - 1);
+	std::uniform_int_distribution<> distr(0, exclusiveMax - 1);
 	return distr(RandomEngine);
 }
 

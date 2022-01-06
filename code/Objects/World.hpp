@@ -60,7 +60,7 @@ class World : private sf::NonCopyable {
         sf::Vector2f mSpawnPosition;
         float mScrollSpeed;
         Aircraft* mPlayerAircraft;
-        std::vector<SpawnPoint> mEnemySprawnPoints;
+        std::vector<SpawnPoint> mEnemySpawnPoints;
         std::vector<Aircraft*> mActiveEnemies;
 };
 
@@ -148,7 +148,7 @@ bool matchesCategories(SceneNode::Pair& colliders, Category::Type type1, Categor
         return true;
     }
     else if ((type1 & category2) && (type2 & category1)) {
-        std::swap(colliders.first, colliders.seconds);
+        std::swap(colliders.first, colliders.second);
         return true;
     }
     else {
@@ -178,7 +178,7 @@ void World::handleCollisions() {
         else if (matchesCategories(pair, Category::EnemyAircraft, Category::AlliedProjectile)
 			  || matchesCategories(pair, Category::PlayerAircraft, Category::EnemyProjectile)) {
             auto& aircraft = static_cast<Aircraft&>(*pair.first);
-            auto& projectile = static_cast<Aircraft&>(*pair.second);
+            auto& projectile = static_cast<Projectile&>(*pair.second);
 
             aircraft.damage(projectile.getDamage());
             projectile.destroy();
@@ -191,7 +191,7 @@ void World::buildScene() {
 		Category::Type category = (i == Air) ? Category::SceneAirLayer : Category::None;
 
         SceneNode::Ptr layer(new SceneNode(category));
-        mSceneLayer[i] = layer.get();
+        mSceneLayers[i] = layer.get();
 
         mSceneGraph.attachChild(std::move(layer));
 	}
@@ -203,7 +203,7 @@ void World::buildScene() {
 	backgroundSprite->setPosition(mWorldBounds.left, mWorldBounds.top);
 	mSceneLayers[Background]->attachChild(std::move(backgroundSprite));
 
-	std::unique_ptr<Aircraft> player(new Aircraft(Aircraft::Eagle, mTextures));
+	std::unique_ptr<Aircraft> player(new Aircraft(Aircraft::Eagle, mTextures, mFonts));
 	mPlayerAircraft = player.get();
 	mPlayerAircraft->setPosition(mSpawnPosition);
 	mSceneLayers[Air]->attachChild(std::move(player));
@@ -221,18 +221,18 @@ void World::addEnemies() {
     addEnemy(Aircraft::Avenger, 70.f, 1400.f);
     addEnemy(Aircraft::Avenger, 70.f, 1600.f);
 
-    std::sort(mEnemySpawnPoints.begin(), mEnemySpawnPoints.end(), [](SpawnPoint lhs, rhs) {
+    std::sort(mEnemySpawnPoints.begin(), mEnemySpawnPoints.end(), [](SpawnPoint lhs, SpawnPoint rhs) {
         return lhs.y < rhs.y;
     });
 }
 
-void World::addEnemy(Aircraft::Type type, float relX, relY) {
+void World::addEnemy(Aircraft::Type type, float relX, float relY) {
     SpawnPoint spawn(type, mSpawnPosition.x + relX, mSpawnPosition.y - relY);
     mEnemySpawnPoints.push_back(spawn);
 }
 
 void World::spawnEnemies() {
-    while(!mEnemySpawnPoints.empty() && mEnemySpawnPoints.back().y > getBattlefiledBounds().top) {
+    while(!mEnemySpawnPoints.empty() && mEnemySpawnPoints.back().y > getBattlefieldBounds().top) {
         SpawnPoint spawn = mEnemySpawnPoints.back();
         std::unique_ptr<Aircraft> enemy(new Aircraft(spawn.type, mTextures, mFonts));
         enemy->setPosition(spawn.x, spawn.y);
@@ -247,7 +247,7 @@ void World::destroyEntitiesOutsideView() {
     Command command;
     command.category = Category::Projectile | Category::EnemyAircraft;
     command.action = derivedAction<Entity>([this] (Entity& e, sf::Time) {
-        if (!getBattlefiledBounds().intersects(e.getBoundingRect())) {
+        if (!getBattlefieldBounds().intersects(e.getBoundingRect())) {
             e.destroy();
         }
     });
@@ -285,8 +285,8 @@ void World::guideMissiles() {
             missile.guideTowards(closestEnemy->getWorldPosition());
     });
 
-    mCommandsQueue.push(enemyCollector);
-    mCommandsQueue.push(missileGuider);
+    mCommandQueue.push(enemyCollector);
+    mCommandQueue.push(missileGuider);
     mActiveEnemies.clear();
 }
 

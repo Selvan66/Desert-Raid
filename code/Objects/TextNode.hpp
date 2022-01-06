@@ -21,12 +21,12 @@ TextNode::TextNode(const FontHolder& fonts, const std::string& text) {
 }
 
 void TextNode::setString(const std::string& text) {
-    target.draw(mText, states);
+    mText.setString(text);
+    Utility::centerOrigin(mText);
 }
 
 void TextNode::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const {
-    mText.setString(text);
-    Utility::centerOrigin(mText);
+    target.draw(mText, states);
 }
 
 

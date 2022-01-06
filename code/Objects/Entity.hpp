@@ -16,7 +16,7 @@ class Entity : public SceneNode {
         void destroy();
         virtual bool isDestroyed() const;
     protected:
-        virtual void updateCurrent(sf::Time dt);
+        virtual void updateCurrent(sf::Time dt, CommandQueue&);
     private:
         sf::Vector2f mVelocity;
         int mHitpoints;
@@ -69,6 +69,6 @@ bool Entity::isDestroyed() const {
     return mHitpoints <= 0;
 }
 
-void Entity::updateCurrent(sf::Time dt) {
+void Entity::updateCurrent(sf::Time dt, CommandQueue&) {
     sf::Transformable::move(mVelocity * dt.asSeconds());
 }

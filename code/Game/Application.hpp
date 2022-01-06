@@ -27,7 +27,7 @@ class Application {
 };
 
 Application::Application() 
-: mWindow(sf::VideoMode(640, 480), "SFML - game", sf::Style::Close),
+: mWindow(sf::VideoMode(1024, 768), "SFML - game", sf::Style::Close),
 mTextures(), mFonts(), mPlayer(), mStateStack(State::Context(mWindow, mTextures, mFonts, mPlayer)) {   
     mWindow.setKeyRepeatEnabled(false);
     mFonts.load(Fonts::Sansation, "../assets/Sansation.ttf");

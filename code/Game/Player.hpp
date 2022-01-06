@@ -58,7 +58,7 @@ Player::Player()
     mKeyBinding[sf::Keyboard::Up] = MoveUp;
     mKeyBinding[sf::Keyboard::Down] = MoveDown;
     mKeyBinding[sf::Keyboard::Space] = Fire;
-    mKeyBinding[sf::Keyboard::M] = LunchMissile;
+    mKeyBinding[sf::Keyboard::M] = LaunchMissile;
 
     initializeActions();
 
@@ -108,12 +108,10 @@ Player::MissionStatus Player::getMissionStatus() const {
 }
 
 void Player::initializeActions() {
-    const float playerSpeed = 200.f;
-
-	mActionBinding[MoveLeft].action	 = derivedAction<Aircraft>(AircraftMover(-playerSpeed, 0.f));
-	mActionBinding[MoveRight].action = derivedAction<Aircraft>(AircraftMover(+playerSpeed, 0.f));
-	mActionBinding[MoveUp].action    = derivedAction<Aircraft>(AircraftMover(0.f, -playerSpeed));
-	mActionBinding[MoveDown].action  = derivedAction<Aircraft>(AircraftMover(0.f, +playerSpeed));
+	mActionBinding[MoveLeft].action	 = derivedAction<Aircraft>(AircraftMover(-1, 0.f));
+	mActionBinding[MoveRight].action = derivedAction<Aircraft>(AircraftMover(+1, 0.f));
+	mActionBinding[MoveUp].action    = derivedAction<Aircraft>(AircraftMover(0.f, -1));
+	mActionBinding[MoveDown].action  = derivedAction<Aircraft>(AircraftMover(0.f, +1));
     mActionBinding[Fire].action = derivedAction<Aircraft>([] (Aircraft& a, sf::Time){ a.fire(); });
     mActionBinding[LaunchMissile].action = derivedAction<Aircraft>([] (Aircraft& a, sf::Time){ a.launchMissile(); });
 }

@@ -1,12 +1,14 @@
 #pragma once
 
-#include "Objects/Aircraft.hpp"
 #include "Game/Command.hpp"
 #include "Utils/ResourceIdentifiers.hpp"
+#include "Utils/Utility.hpp"
 
 #include <functional>
 
 using namespace std::placeholders;
+
+class Aircraft;
 
 struct PickupData {
     std::function<void(Aircraft&)> action;
@@ -15,9 +17,7 @@ struct PickupData {
 
 std::vector<PickupData> initializePickupData();
 
-namespace {
-    const std::vector<PickupData> Table = initializePickupData();
-}
+const std::vector<PickupData> PickupTable = initializePickupData();
 
 class Pickup : public Entity {
     public:
@@ -40,27 +40,11 @@ class Pickup : public Entity {
         sf::Sprite mSprite;
 };
 
-std::vector<PickupData> initializePickupData() {
-    std::vector<PickupData> data(Pickup::TypeCount);
-    
-    data[Pickup::HealthRefill].texture = Textures::HealthRefill;
-    data[Pickup::HealthRefill].action = [] (Aircraft& a) { a.repair(25); };
 
-    data[Pickup::MissileRefill].texture = Textures::MissileRefill;
-    data[Pickup::MissileRefill].action = std::bind(&Aircraft::collectMissiles, _1, 3);
-
-    data[Pickup::FireSpread].texture = Textures::FireSpread;
-    data[Pickup::FireSpread].action = std::bind(&Aircraft::increaseSpread, _1);
-
-    data[Pickup::FireRate].texture = Textures::FireRate;
-    data[Pickup::FireRate].action = std::bind(&Aircraft::increaseFireRate, _1);
-
-    return data;
-}
 
 Pickup::Pickup(Type type, const TextureHolder& textures) 
-: Entity(1), mType(type), mSprite(textures.get(Table[type].texture)) {
-    centerOrigin(mSprite);
+: Entity(1), mType(type), mSprite(textures.get(PickupTable[type].texture)) {
+    Utility::centerOrigin(mSprite);
 }
 
 unsigned int Pickup::getCategory() const {
@@ -68,11 +52,11 @@ unsigned int Pickup::getCategory() const {
 }
 
 sf::FloatRect Pickup::getBoundingRect() const {
-    return SceneNode::getWorldTranform().tranformRect(mSprite.getGlobalBounds());
+    return SceneNode::getWorldTransform().transformRect(mSprite.getGlobalBounds());
 }
 
 void Pickup::apply(Aircraft& player) const {
-    Table[mType].action(player);
+    PickupTable[mType].action(player);
 }
 
 void Pickup::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const {
