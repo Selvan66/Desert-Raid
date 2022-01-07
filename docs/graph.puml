@@ -12,12 +12,24 @@ class SpriteNode extends SceneNode {
     Draw simple sprite on window
 }
 
+class TextNode extends SceneNode {
+    Draw text on window
+}
+
 class Entity extends SceneNode {
     Class give objects ability to move
 }
 
 class Aircraft extends Entity {
     Draw ship sprite on window
+}
+
+class Pickup extends Entity {
+    Draw pickups on window
+}
+
+class Projectile extends Entity {
+    Draw projectiles on window
 }
 
 class ResourceHolder << typename T >> {
@@ -103,6 +115,10 @@ class PauseState extends State {
 
 class SettingsState extends State {
     Allow to change move set
+}
+
+class GameOverState extends State {
+    Open up when player lose or win 
 }
 
 class LoadingState extends State {

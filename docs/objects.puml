@@ -1,0 +1,27 @@
+@startuml objects
+
+!define DARKBLUE
+!includeurl https://raw.githubusercontent.com/Drakemor/RedDress-PlantUML/master/style.puml
+
+artifact SceneNode
+artifact Entity
+artifact SpriteNode
+artifact TextNode
+artifact Projectile
+artifact Aircraft
+artifact Pickup
+artifact AircraftData
+artifact ProjectileData
+artifact PickupData
+
+SceneNode == SpriteNode
+SceneNode == Entity
+SceneNode == TextNode
+Entity == Aircraft
+Entity == Projectile
+Entity == Pickup
+Aircraft .. AircraftData
+Projectile .. ProjectileData
+Pickup .. PickupData
+
+@enduml
