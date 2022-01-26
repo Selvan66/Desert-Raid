@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include <iostream>
 
-int main() {
+int WinMain() {
 	try {
 		Application app;
 		app.run();

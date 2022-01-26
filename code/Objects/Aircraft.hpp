@@ -23,6 +23,7 @@ struct AircraftData {
     int hitpoints;
     float speed;
     Textures::ID texture;
+    sf::IntRect textureRect;
     sf::Time fireInterval;
     std::vector<Direction> directions;
 };
@@ -80,27 +81,19 @@ class Aircraft : public Entity {
         TextNode* mMissileDisplay;
 };
 
-Textures::ID toTextureID(Aircraft::Type type) {
-    switch (type) {
-        case Aircraft::Eagle:
-            return Textures::Eagle;
-        case Aircraft::Raptor:
-            return Textures::Raptor;
-    }
-    return Textures::Eagle;
-}
-
 std::vector<AircraftData> initializeAircraftData() {
     std::vector<AircraftData> data(Aircraft::TypeCount);
 
     data[Aircraft::Eagle].hitpoints = 100;
     data[Aircraft::Eagle].speed = 200.f;
     data[Aircraft::Eagle].fireInterval = sf::seconds(1);
-    data[Aircraft::Eagle].texture = Textures::Eagle;
+    data[Aircraft::Eagle].texture = Textures::Entities;
+    data[Aircraft::Eagle].textureRect = sf::IntRect(0, 0, 48, 64);
 
     data[Aircraft::Raptor].hitpoints = 20;
     data[Aircraft::Raptor].speed = 80.f;
-    data[Aircraft::Raptor].texture = Textures::Raptor;
+    data[Aircraft::Raptor].texture = Textures::Entities;
+    data[Aircraft::Raptor].textureRect = sf::IntRect(144, 0, 84, 64);
     data[Aircraft::Raptor].directions.emplace_back(45.f, 80.f);
     data[Aircraft::Raptor].directions.emplace_back(-45.f, 160.f);
     data[Aircraft::Raptor].directions.emplace_back(45.f, 80.f);
@@ -108,7 +101,8 @@ std::vector<AircraftData> initializeAircraftData() {
 
     data[Aircraft::Avenger].hitpoints = 40;
     data[Aircraft::Avenger].speed = 50.f;
-    data[Aircraft::Avenger].texture = Textures::Avenger;
+    data[Aircraft::Avenger].texture = Textures::Entities;
+    data[Aircraft::Avenger].textureRect = sf::IntRect(228, 0, 60, 59);
     data[Aircraft::Avenger].directions.emplace_back(45.f, 50.f);
     data[Aircraft::Avenger].directions.emplace_back(0.f, 50.f);
     data[Aircraft::Avenger].directions.emplace_back(-45.f, 100.f);
@@ -123,23 +117,27 @@ std::vector<AircraftData> initializeAircraftData() {
 std::vector<PickupData> initializePickupData() {
     std::vector<PickupData> data(Pickup::TypeCount);
     
-    data[Pickup::HealthRefill].texture = Textures::HealthRefill;
+    data[Pickup::HealthRefill].texture = Textures::Entities;
+    data[Pickup::HealthRefill].textureRect = sf::IntRect(0, 64, 40, 40);
     data[Pickup::HealthRefill].action = [] (Aircraft& a) { a.repair(25); };
 
-    data[Pickup::MissileRefill].texture = Textures::MissileRefill;
+    data[Pickup::MissileRefill].texture = Textures::Entities;
+    data[Pickup::MissileRefill].textureRect = sf::IntRect(40, 64, 40, 40);
     data[Pickup::MissileRefill].action = std::bind(&Aircraft::collectMissiles, _1, 3);
 
-    data[Pickup::FireSpread].texture = Textures::FireSpread;
+    data[Pickup::FireSpread].texture = Textures::Entities;
+    data[Pickup::FireSpread].textureRect = sf::IntRect(80, 64, 40, 40);
     data[Pickup::FireSpread].action = std::bind(&Aircraft::increaseSpread, _1);
 
-    data[Pickup::FireRate].texture = Textures::FireRate;
+    data[Pickup::FireRate].texture = Textures::Entities;
+    data[Pickup::FireRate].textureRect = sf::IntRect(120, 64, 40, 40);
     data[Pickup::FireRate].action = std::bind(&Aircraft::increaseFireRate, _1);
 
     return data;
 }
 
 Aircraft::Aircraft(Type type, const TextureHolder& textures, const FontHolder& fonts)
-: Entity(AircraftTable[type].hitpoints), mType(type), mSprite(textures.get(AircraftTable[type].texture)),
+: Entity(AircraftTable[type].hitpoints), mType(type), mSprite(textures.get(AircraftTable[type].texture), AircraftTable[type].textureRect),
 mFireCommand(), mMissileCommand(), mFireCountdown(sf::Time::Zero), mIsFiring(false), mIsLaunchingMissile(false),
 mIsMarkedForRemoval(false), mFireRateLevel(1), mSpreadLevel(1), mMissileAmmo(2), mDropPickupCommand(), 
 mTravelledDistance(0.f), mDirectionIndex(0), mHealthDisplay(nullptr), mMissileDisplay(nullptr) {

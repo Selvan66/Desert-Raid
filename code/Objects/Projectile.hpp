@@ -10,6 +10,7 @@ struct ProjectileData {
     int damage;
     float speed;
     Textures::ID texture;
+    sf::IntRect textureRect;
 };
 
 std::vector<ProjectileData> initializeProjectileData();
@@ -48,21 +49,24 @@ std::vector<ProjectileData> initializeProjectileData() {
 
     data[Projectile::AlliedBullet].damage = 10;
     data[Projectile::AlliedBullet].speed = 300.f;
-    data[Projectile::AlliedBullet].texture = Textures::Bullet;
+    data[Projectile::AlliedBullet].texture = Textures::Entities;
+    data[Projectile::AlliedBullet].textureRect = sf::IntRect(175, 64, 3, 14);
 
     data[Projectile::EnemyBullet].damage = 10;
     data[Projectile::EnemyBullet].speed = 300.f;
-    data[Projectile::EnemyBullet].texture = Textures::Bullet;
+    data[Projectile::EnemyBullet].texture = Textures::Entities;
+    data[Projectile::EnemyBullet].textureRect = sf::IntRect(178, 64, 3, 14);
 
     data[Projectile::Missile].damage = 200;
     data[Projectile::Missile].speed = 150.f;
-    data[Projectile::Missile].texture = Textures::Missile;
+    data[Projectile::Missile].texture = Textures::Entities;
+    data[Projectile::Missile].textureRect = sf::IntRect(160, 64, 15, 32);
 
     return data;
 }
 
 Projectile::Projectile(Type type, const TextureHolder& textures) 
-: Entity(1), mType(type), mSprite(textures.get(Table[type].texture)), mTargetDirection() {
+: Entity(1), mType(type), mSprite(textures.get(Table[type].texture), Table[type].textureRect), mTargetDirection() {
     Utility::centerOrigin(mSprite);
 }
 

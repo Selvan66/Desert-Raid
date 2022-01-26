@@ -108,16 +108,11 @@ bool World::hasPlayerReachedEnd() const {
 }
 
 void World::loadTextures() {
-    mTextures.load(Textures::Eagle, "../assets/Eagle.png");
-    mTextures.load(Textures::Raptor, "../assets/Raptor.png");
-    mTextures.load(Textures::Avenger, "../assets/Avenger.png");
-    mTextures.load(Textures::Desert, "../assets/Desert.png");
-    mTextures.load(Textures::Bullet, "../assets/Bullet.png");
-    mTextures.load(Textures::Missile, "../assets/Missile.png");
-    mTextures.load(Textures::HealthRefill, "../assets/HealthRefill.png");
-    mTextures.load(Textures::MissileRefill, "../assets/MissileRefill.png");
-    mTextures.load(Textures::FireSpread, "../assets/FireSpread.png");
-    mTextures.load(Textures::FireRate, "../assets/FireRate.png");
+    mTextures.load(Textures::Entities, "../assets/Textures/Entities.png");
+    mTextures.load(Textures::Jungle, "../assets/Textures/Jungle.png");
+    mTextures.load(Textures::Explosion, "../assets/Textures/Explosion.png");
+    mTextures.load(Textures::Particle, "../assets/Textures/Particle.png");
+    mTextures.load(Textures::FinishLine, "../assets/Textures/FinishLine.png");
 }
 
 void World::adaptPlayerPosition() {
@@ -195,7 +190,7 @@ void World::buildScene() {
 
         mSceneGraph.attachChild(std::move(layer));
 	}
-	sf::Texture& texture = mTextures.get(Textures::Desert);
+	sf::Texture& texture = mTextures.get(Textures::Jungle);
 	sf::IntRect textureRect(mWorldBounds);
 	texture.setRepeated(true);
 

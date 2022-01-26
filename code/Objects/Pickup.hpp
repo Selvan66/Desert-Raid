@@ -13,6 +13,7 @@ class Aircraft;
 struct PickupData {
     std::function<void(Aircraft&)> action;
     Textures::ID texture;
+    sf::IntRect textureRect;
 };
 
 std::vector<PickupData> initializePickupData();
@@ -43,7 +44,7 @@ class Pickup : public Entity {
 
 
 Pickup::Pickup(Type type, const TextureHolder& textures) 
-: Entity(1), mType(type), mSprite(textures.get(PickupTable[type].texture)) {
+: Entity(1), mType(type), mSprite(textures.get(PickupTable[type].texture), PickupTable[type].textureRect) {
     Utility::centerOrigin(mSprite);
 }
 

@@ -12,6 +12,13 @@ class Button : public Component {
     public:
         typedef std::shared_ptr<Button> Ptr;
         typedef std::function<void()> Callback;
+
+        enum Type {
+            Normal,
+            Selected,
+            Pressed,
+            ButtonCount
+        };
     public:
         Button(const FontHolder& fonts, const TextureHolder& textures);
         void setCallback(Callback callback);
@@ -25,20 +32,17 @@ class Button : public Component {
         virtual void handleEvent(const sf::Event& event);
     private:
         virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+        void changeTexture(Type buttonType);
     private:
         Callback mCallback;
-        const sf::Texture& mNormalTexture;
-        const sf::Texture& mSelectedTexture;
-        const sf::Texture& mPressedTexture;
         sf::Sprite mSprite;
         sf::Text mText;
         bool mIsToggle;
 };
 
 Button::Button(const FontHolder& fonts, const TextureHolder& textures) 
-: mCallback(), mNormalTexture(textures.get(Textures::ButtonNormal)), mSelectedTexture(textures.get(Textures::ButtonSelected)),
-mPressedTexture(textures.get(Textures::ButtonPressed)), mText("", fonts.get(Fonts::Sansation), 16), mIsToggle(false) {
-    mSprite.setTexture(mNormalTexture);
+: mCallback(), mSprite(textures.get(Textures::Buttons)), mText("", fonts.get(Fonts::Sansation), 16), mIsToggle(false) {
+    changeTexture(Normal);
     sf::FloatRect bounds = mSprite.getLocalBounds();
     mText.setPosition(bounds.width / 2.f, bounds.height / 2.f);
 }
@@ -62,18 +66,18 @@ bool Button::isSelectable() const {
 
 void Button::select() {
     Component::select();
-    mSprite.setTexture(mSelectedTexture);
+    changeTexture(Selected);
 }
 
 void Button::deselect() {
     Component::deselect();
-    mSprite.setTexture(mNormalTexture);
+    changeTexture(Normal);
 }
 
 void Button::activate() {
     Component::activate();
     if (mIsToggle) {
-        mSprite.setTexture(mPressedTexture);
+        changeTexture(Pressed);
     }
     if (mCallback) {
         mCallback();
@@ -87,10 +91,10 @@ void Button::deactivate() {
     Component::deactivate();
     if (mIsToggle) {
         if (isSelected()) {
-            mSprite.setTexture(mSelectedTexture);
+            changeTexture(Selected);
         }
         else {
-            mSprite.setTexture(mNormalTexture);
+            changeTexture(Normal);
         }
     }
 }
@@ -103,6 +107,11 @@ void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const
     states.transform *= Transformable::getTransform();
     target.draw(mSprite, states);
     target.draw(mText, states);
+}
+
+void Button::changeTexture(Type buttonType) {
+    sf::IntRect textureRect(0, 50 * buttonType, 200, 50);
+    mSprite.setTextureRect(textureRect);
 }
 
 }
