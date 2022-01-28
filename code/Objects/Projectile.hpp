@@ -15,9 +15,7 @@ struct ProjectileData {
 
 std::vector<ProjectileData> initializeProjectileData();
 
-namespace {
-    const std::vector<ProjectileData> Table = initializeProjectileData();
-}
+const std::vector<ProjectileData> ProjectileTable = initializeProjectileData();
 
 class Projectile : public Entity {
     public:
@@ -66,7 +64,7 @@ std::vector<ProjectileData> initializeProjectileData() {
 }
 
 Projectile::Projectile(Type type, const TextureHolder& textures) 
-: Entity(1), mType(type), mSprite(textures.get(Table[type].texture), Table[type].textureRect), mTargetDirection() {
+: Entity(1), mType(type), mSprite(textures.get(ProjectileTable[type].texture), ProjectileTable[type].textureRect), mTargetDirection() {
     Utility::centerOrigin(mSprite);
 }
 
@@ -93,11 +91,11 @@ sf::FloatRect Projectile::getBoundingRect() const {
 }
 
 float Projectile::getMaxSpeed() const {
-    return Table[mType].speed;
+    return ProjectileTable[mType].speed;
 }
 
 int Projectile::getDamage() const {
-    return Table[mType].damage;
+    return ProjectileTable[mType].damage;
 }
 
 void Projectile::updateCurrent(sf::Time dt, CommandQueue& commands) {

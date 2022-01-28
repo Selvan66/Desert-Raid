@@ -6,6 +6,8 @@
 
 #include <deque>
 
+const std::vector<ParticleData> ParticleTable = initializeParticleData();
+
 class ParticleNode : public SceneNode {
     public:
         ParticleNode(Particle::Type type, const TextureHolder& textures);
