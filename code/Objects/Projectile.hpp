@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Objects/Entity.hpp"
+#include "Objects/EmitterNode.hpp"
 #include "Utils/ResourceIdentifiers.hpp"
 #include "Utils/Utility.hpp"
 
@@ -66,6 +67,16 @@ std::vector<ProjectileData> initializeProjectileData() {
 Projectile::Projectile(Type type, const TextureHolder& textures) 
 : Entity(1), mType(type), mSprite(textures.get(ProjectileTable[type].texture), ProjectileTable[type].textureRect), mTargetDirection() {
     Utility::centerOrigin(mSprite);
+
+    if (isGuided()) {
+        std::unique_ptr<EmitterNode> smoke(new EmitterNode(Particle::Smoke));
+        smoke->setPosition(0.f, getBoundingRect().height / 2.f);
+        SceneNode::attachChild(std::move(smoke));
+
+        std::unique_ptr<EmitterNode> propellant(new EmitterNode(Particle::Propellant));
+        propellant->setPosition(0.f, getBoundingRect().height / 2.f);
+        SceneNode::attachChild(std::move(propellant));
+    }
 }
 
 void Projectile::guideTowards(sf::Vector2f position) {

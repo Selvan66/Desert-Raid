@@ -44,13 +44,13 @@ Particle::Type ParticleNode::getParticleType() const {
     return mType;
 }
 
-void ParticleNode::getCategory() const {
+unsigned int ParticleNode::getCategory() const {
     return Category::ParticleSystem;
 }
 
 void ParticleNode::updateCurrent(sf::Time dt, CommandQueue& commands) {
-    while (!mParticle.empty() && mParticle.front().lifetime <= sf::Time::Zero)
-        mParticle.pop_front();
+    while (!mParticles.empty() && mParticles.front().lifetime <= sf::Time::Zero)
+        mParticles.pop_front();
     for (auto& particle : mParticles)
         particle.lifetime -= dt;
     mNeedsVertexUpdate = true;
@@ -58,7 +58,7 @@ void ParticleNode::updateCurrent(sf::Time dt, CommandQueue& commands) {
 
 void ParticleNode::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const {
     if (mNeedsVertexUpdate) {
-        computeVerticles();
+        computeVertices();
         mNeedsVertexUpdate = false;
     }
 

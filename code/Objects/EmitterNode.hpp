@@ -22,7 +22,7 @@ EmitterNode::EmitterNode(Particle::Type type)
 void EmitterNode::updateCurrent(sf::Time dt, CommandQueue& commands) 
 {
    if (mParticleSystem) {
-       emitParticle(dt);
+       emitParticles(dt);
    }
    else {
        auto finder = [this] (ParticleNode& container, sf::Time) {
@@ -34,7 +34,7 @@ void EmitterNode::updateCurrent(sf::Time dt, CommandQueue& commands)
        Command command;
        command.category = Category::ParticleSystem;
        command.action = derivedAction<ParticleNode>(finder);
-       command.push(command);
+       commands.push(command);
    }
 }
 
