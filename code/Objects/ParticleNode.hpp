@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Objects/SceneNode.hpp"
-#include "Objects/Particle.hpp"
+#include "Effects/Particle.hpp"
 #include "Utils/ResourceIdentifiers.hpp"
 
 #include <deque>
