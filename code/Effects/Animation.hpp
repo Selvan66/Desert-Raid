@@ -41,7 +41,7 @@ mDuration(sf::Time::Zero), mElapsedTime(sf::Time::Zero), mRepeat(false) {
 
 Animation::Animation(const sf::Texture& texture) 
 : mSprite(texture), mFrameSize(), mNumFrames(0), mCurrentFrame(0), 
-mDuration(sf::Time::Zero), mElapsedTime(sf::Time::Zero), mReapeat(false) {
+mDuration(sf::Time::Zero), mElapsedTime(sf::Time::Zero), mRepeat(false) {
 }
 
 void Animation::setTexture(const sf::Texture& texture) {
