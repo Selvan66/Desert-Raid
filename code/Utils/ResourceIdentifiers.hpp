@@ -16,6 +16,14 @@ namespace Textures {
     };
 }
 
+namespace Shader {
+    enum ID {
+        BrightnessPass,
+        DownSamplePass,
+        GaussianBlurPass,
+        AddPass,
+    };
+}
 namespace Fonts {
     enum ID {
         Sansation
@@ -27,3 +35,4 @@ class ResourceHolder;
 
 typedef ResourceHolder<sf::Texture, Textures::ID> TextureHolder;
 typedef ResourceHolder<sf::Font, Fonts::ID> FontHolder;
+typedef ResourceHolder<sf::Shader, Shader::ID> ShaderHolder;
