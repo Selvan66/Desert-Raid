@@ -88,9 +88,9 @@ void ParticleNode::computeVertices() const {
         color.a = static_cast<sf::Uint8>(255 * std::max(ratio, 0.f));
 
         addVertex(pos.x - half.x, pos.y - half.y, 0.f, 0.f, color);
-        addVertex(pos.x - half.x, pos.y - half.y, size.x, 0.f, color);
-        addVertex(pos.x - half.x, pos.y - half.y, size.x, size.y, color);
-        addVertex(pos.x - half.x, pos.y - half.y, 0.f, size.y, color);
+        addVertex(pos.x + half.x, pos.y - half.y, size.x, 0.f, color);
+        addVertex(pos.x + half.x, pos.y + half.y, size.x, size.y, color);
+        addVertex(pos.x - half.x, pos.y + half.y, 0.f, size.y, color);
     }
 }
 

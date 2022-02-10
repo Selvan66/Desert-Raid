@@ -17,7 +17,7 @@ class BloomEffect : public PostEffect {
         void blurMultipass(RenderTextureArray& renderTextures);
         void blur(const sf::RenderTexture& input, sf::RenderTexture& output, sf::Vector2f offsetFactor);
         void downsample(const sf::RenderTexture& input, sf::RenderTexture& output);
-        void add(const sf::RenderTexture& source, const sf::RenderTexture& bloom, sf::RenderTarget& target);
+        void add(const sf::RenderTexture& source, const sf::RenderTexture& bloom, sf::RenderTarget& output);
     private:
         ShaderHolder mShaders;
         sf::RenderTexture mBrightnessTexture;
@@ -27,13 +27,13 @@ class BloomEffect : public PostEffect {
 
 BloomEffect::BloomEffect() 
 : mShaders(), mBrightnessTexture(), mFirstPassTextures(), mSecondPassTextures() {
-    mShaders.load(Shaders::BrightnessPass, "../assets/Shaders/Fullpass.vert", "../assets/Shaders/Brightness.frag");
-    mShaders.load(Shaders::DownSamplePass, "../assets/Shaders/Fullpass.vert", "../assets/Shaders/DownSample.frag");
-    mShaders.load(Shaders::GaussianBlurPass, "../assets/Shaders/Fullpass.vert", "../assets/Shaders/GuassianBlur.frag");
-    mShaders.load(Shaders::AddPass, "../assets/Shaders/Fullpass.vert", "../assets/Shaders/Add.frag");
+    mShaders.load(Shader::BrightnessPass, "../assets/Shaders/Fullpass.vert", "../assets/Shaders/Brightness.frag");
+    mShaders.load(Shader::DownSamplePass, "../assets/Shaders/Fullpass.vert", "../assets/Shaders/DownSample.frag");
+    mShaders.load(Shader::GaussianBlurPass, "../assets/Shaders/Fullpass.vert", "../assets/Shaders/GuassianBlur.frag");
+    mShaders.load(Shader::AddPass, "../assets/Shaders/Fullpass.vert", "../assets/Shaders/Add.frag");
 }
 
-void BloomEffect::apply(const sf::RenderTarget& input, sf::RenderTarget& output) {
+void BloomEffect::apply(const sf::RenderTexture& input, sf::RenderTarget& output) {
     prepareTextures(input.getSize());
     filterBright(input, mBrightnessTexture);
     
@@ -58,17 +58,17 @@ void BloomEffect::prepareTextures(sf::Vector2u size) {
         mFirstPassTextures[0].setSmooth(true);
         mFirstPassTextures[1].setSmooth(true);
 
-        mSecondPassTextures[0].create(size.x / 2, size.y / 2);
-        mSecondPassTextures[1].create(size.x / 2, size.y / 2);
+        mSecondPassTextures[0].create(size.x / 4, size.y / 4);
+        mSecondPassTextures[1].create(size.x / 4, size.y / 4);
         mSecondPassTextures[0].setSmooth(true);
         mSecondPassTextures[1].setSmooth(true);
     }
 }
 
 void BloomEffect::filterBright(const sf::RenderTexture& input, sf::RenderTexture& output) {
-    sf::Shader& brightness = mShader.get(Shaders::BrightnessPass);
+    sf::Shader& brightness = mShaders.get(Shader::BrightnessPass);
 
-    brightness.setParameter("source", input.getTexture());
+    brightness.setUniform("source", input.getTexture());
     PostEffect::applyShader(brightness, output);
     output.display();
 }
@@ -83,25 +83,25 @@ void BloomEffect::blurMultipass(RenderTextureArray& renderTextures) {
 }
 
 void BloomEffect::blur(const sf::RenderTexture& input, sf::RenderTexture& output, sf::Vector2f offsetFactor) {
-    sf::Shader& gaussianBlur = mShaders.get(Shaders::GaussianBlurPass);
-    gaussianBlur.setParameter("source", input.getTexture());
-    gaussianBlur.setParameter("offsetFactor", offsetFactor);
+    sf::Shader& gaussianBlur = mShaders.get(Shader::GaussianBlurPass);
+    gaussianBlur.setUniform("source", input.getTexture());
+    gaussianBlur.setUniform("offsetFactor", offsetFactor);
     PostEffect::applyShader(gaussianBlur, output);
     output.display();
 }
 
 void BloomEffect::downsample(const sf::RenderTexture& input, sf::RenderTexture& output) {
-    sf::Shader& downSample = mShaders.get(Shaders::DownSamplePass);
-    downSample.setParameter("source", input.getTexture());
-    downSample.setParameter("sourceSize", sf::Vector2f(input.getSize()));
+    sf::Shader& downSample = mShaders.get(Shader::DownSamplePass);
+    downSample.setUniform("source", input.getTexture());
+    downSample.setUniform("sourceSize", sf::Vector2f(input.getSize()));
     PostEffect::applyShader(downSample, output);
     output.display();
 }
 
-void BloomEffect::add(const sf::RenderTexture& source, const sf::RenderTexture& bloom, sf::RenderTarget& target) {
-    sf::Shader& adder = mShaders.get(Shaders::AddPass);
+void BloomEffect::add(const sf::RenderTexture& source, const sf::RenderTexture& bloom, sf::RenderTarget& output) {
+    sf::Shader& adder = mShaders.get(Shader::AddPass);
 
-    adder.setParameter("source", source.getTexture());
-    adder.setParameter("bloom", bloom.getTexture());
+    adder.setUniform("source", source.getTexture());
+    adder.setUniform("bloom", bloom.getTexture());
     PostEffect::applyShader(adder, output);
 }

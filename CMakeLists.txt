@@ -18,7 +18,7 @@ set(SFML_STATIC_LIBRARIES TRUE)
 add_subdirectory(SFML)
 
 # Target setup
-add_executable(${EXECUTABLE_NAME} WIN32 ${CODE})
+add_executable(${EXECUTABLE_NAME} ${CODE})
 
 # SFML
 include_directories(${CMAKE_SOURCE_DIR}/SFML/include)

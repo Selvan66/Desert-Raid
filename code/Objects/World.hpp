@@ -3,7 +3,9 @@
 #include "Utils/ResourceIdentifiers.hpp"
 #include "Objects/SpriteNode.hpp"
 #include "Objects/Aircraft.hpp"
+#include "Objects/ParticleNode.hpp"
 #include "Game/CommandQueue.hpp"
+#include "Effects/BloomEffect.hpp"
 
 #include <array>
 #include <cmath>
@@ -13,7 +15,7 @@
 
 class World : private sf::NonCopyable {
     public:
-        explicit World(sf::RenderWindow& window, FontHolder& fonts);
+        explicit World(sf::RenderTarget& outputTarget, FontHolder& fonts);
         void update(sf::Time dt);
         void draw();
         CommandQueue& getCommandQueue();
@@ -36,7 +38,8 @@ class World : private sf::NonCopyable {
     private:
         enum Layer {
             Background,
-            Air,
+            LowerAir,
+            UpperAir,
             LayerCount
         };
 
@@ -49,7 +52,8 @@ class World : private sf::NonCopyable {
             float x, y;
         };
     private:
-        sf::RenderWindow& mWindow;
+        sf::RenderTarget& mTarget;
+        sf::RenderTexture mSceneTexture;
         sf::View mWorldView;
         TextureHolder mTextures;
         FontHolder& mFonts;
@@ -62,12 +66,25 @@ class World : private sf::NonCopyable {
         Aircraft* mPlayerAircraft;
         std::vector<SpawnPoint> mEnemySpawnPoints;
         std::vector<Aircraft*> mActiveEnemies;
+        BloomEffect mBloomEffect;
 };
 
-World::World(sf::RenderWindow& window, FontHolder& fonts) 
-: mWindow(window), mWorldView(window.getDefaultView()), mTextures(), mFonts(fonts), mSceneGraph(), mSceneLayers(),
-mWorldBounds(0.f, 0.f, mWorldView.getSize().x, 2000.f), mSpawnPosition(mWorldView.getSize().x / 2.f, mWorldBounds.height - mWorldView.getSize().y / 2.f),
-mScrollSpeed(-50.f), mPlayerAircraft(nullptr), mEnemySpawnPoints(), mActiveEnemies() {
+World::World(sf::RenderTarget& outputTarget, FontHolder& fonts) 
+: mTarget(outputTarget), 
+mSceneTexture(),
+mWorldView(outputTarget.getDefaultView()), 
+mTextures(), 
+mFonts(fonts), 
+mSceneGraph(), 
+mSceneLayers(),
+mWorldBounds(0.f, 0.f, mWorldView.getSize().x, 5000.f), 
+mSpawnPosition(mWorldView.getSize().x / 2.f, mWorldBounds.height - mWorldView.getSize().y / 2.f),
+mScrollSpeed(-50.f), 
+mPlayerAircraft(nullptr), 
+mEnemySpawnPoints(), 
+mActiveEnemies(),
+mBloomEffect() {
+    mSceneTexture.create(mTarget.getSize().x, mTarget.getSize().y);
     loadTextures();
     buildScene();
     mWorldView.setCenter(mSpawnPosition);
@@ -91,8 +108,17 @@ void World::update(sf::Time dt) {
 }
 
 void World::draw() {
-    mWindow.setView(mWorldView);
-    mWindow.draw(mSceneGraph);
+    if (PostEffect::isSupported()) {
+        mSceneTexture.clear();
+        mSceneTexture.setView(mWorldView);
+        mSceneTexture.draw(mSceneGraph);
+        mSceneTexture.display();
+        mBloomEffect.apply(mSceneTexture, mTarget);
+    }
+    else {
+        mTarget.setView(mWorldView);
+        mTarget.draw(mSceneGraph);
+    }
 }
 
 CommandQueue& World::getCommandQueue() {
@@ -183,7 +209,7 @@ void World::handleCollisions() {
 
 void World::buildScene() {
     for (std::size_t i = 0; i < LayerCount; ++i) {
-		Category::Type category = (i == Air) ? Category::SceneAirLayer : Category::None;
+		Category::Type category = (i == LowerAir) ? Category::SceneAirLayer : Category::None;
 
         SceneNode::Ptr layer(new SceneNode(category));
         mSceneLayers[i] = layer.get();
@@ -194,27 +220,59 @@ void World::buildScene() {
 	sf::IntRect textureRect(mWorldBounds);
 	texture.setRepeated(true);
 
+    float viewHeight = mWorldView.getSize().y;
+    textureRect.height += static_cast<int>(viewHeight);
+
 	std::unique_ptr<SpriteNode> backgroundSprite(new SpriteNode(texture, textureRect));
-	backgroundSprite->setPosition(mWorldBounds.left, mWorldBounds.top);
+	backgroundSprite->setPosition(mWorldBounds.left, mWorldBounds.top - viewHeight);
 	mSceneLayers[Background]->attachChild(std::move(backgroundSprite));
+
+    sf::Texture& finishTexture = mTextures.get(Textures::FinishLine);
+    std::unique_ptr<SpriteNode> finishSprite(new SpriteNode(finishTexture));
+    finishSprite->setPosition(0.f, -76.f);
+    mSceneLayers[Background]->attachChild(std::move(finishSprite));
+
+    std::unique_ptr<ParticleNode> smokeNode(new ParticleNode(Particle::Smoke, mTextures));
+    mSceneLayers[LowerAir]->attachChild(std::move(smokeNode));
+
+    std::unique_ptr<ParticleNode> propellantNode(new ParticleNode(Particle::Propellant, mTextures));
+    mSceneLayers[LowerAir]->attachChild(std::move(propellantNode));
+
 
 	std::unique_ptr<Aircraft> player(new Aircraft(Aircraft::Eagle, mTextures, mFonts));
 	mPlayerAircraft = player.get();
 	mPlayerAircraft->setPosition(mSpawnPosition);
-	mSceneLayers[Air]->attachChild(std::move(player));
+	mSceneLayers[UpperAir]->attachChild(std::move(player));
 
     addEnemies();
 }
 
 void World::addEnemies() {
-    addEnemy(Aircraft::Raptor, 0.f, 500.f);
-    addEnemy(Aircraft::Raptor, 0.f, 1000.f);
-    addEnemy(Aircraft::Raptor, 100.f, 1100.f);
-    addEnemy(Aircraft::Raptor, -100.f, 1100.f);
-    addEnemy(Aircraft::Avenger, -70.f, 1400.f);
-    addEnemy(Aircraft::Avenger, -70.f, 1600.f);
-    addEnemy(Aircraft::Avenger, 70.f, 1400.f);
-    addEnemy(Aircraft::Avenger, 70.f, 1600.f);
+    addEnemy(Aircraft::Raptor,    0.f,  500.f);
+	addEnemy(Aircraft::Raptor,    0.f, 1000.f);
+	addEnemy(Aircraft::Raptor, +100.f, 1150.f);
+	addEnemy(Aircraft::Raptor, -100.f, 1150.f);
+	addEnemy(Aircraft::Avenger,  70.f, 1500.f);
+	addEnemy(Aircraft::Avenger, -70.f, 1500.f);
+	addEnemy(Aircraft::Avenger, -70.f, 1710.f);
+	addEnemy(Aircraft::Avenger,  70.f, 1700.f);
+	addEnemy(Aircraft::Avenger,  30.f, 1850.f);
+	addEnemy(Aircraft::Raptor,  300.f, 2200.f);
+	addEnemy(Aircraft::Raptor, -300.f, 2200.f);
+	addEnemy(Aircraft::Raptor,    0.f, 2200.f);
+	addEnemy(Aircraft::Raptor,    0.f, 2500.f);
+	addEnemy(Aircraft::Avenger,-300.f, 2700.f);
+	addEnemy(Aircraft::Avenger,-300.f, 2700.f);
+	addEnemy(Aircraft::Raptor,    0.f, 3000.f);
+	addEnemy(Aircraft::Raptor,  250.f, 3250.f);
+	addEnemy(Aircraft::Raptor, -250.f, 3250.f);
+	addEnemy(Aircraft::Avenger,   0.f, 3500.f);
+	addEnemy(Aircraft::Avenger,   0.f, 3700.f);
+	addEnemy(Aircraft::Raptor,    0.f, 3800.f);
+	addEnemy(Aircraft::Avenger,   0.f, 4000.f);
+	addEnemy(Aircraft::Avenger,-200.f, 4200.f);
+	addEnemy(Aircraft::Raptor,  200.f, 4200.f);
+	addEnemy(Aircraft::Raptor,    0.f, 4400.f);
 
     std::sort(mEnemySpawnPoints.begin(), mEnemySpawnPoints.end(), [](SpawnPoint lhs, SpawnPoint rhs) {
         return lhs.y < rhs.y;
@@ -233,7 +291,7 @@ void World::spawnEnemies() {
         enemy->setPosition(spawn.x, spawn.y);
         enemy->setRotation(180.f);
 
-        mSceneLayers[Air]->attachChild(std::move(enemy));
+        mSceneLayers[UpperAir]->attachChild(std::move(enemy));
         mEnemySpawnPoints.pop_back();
     }
 }

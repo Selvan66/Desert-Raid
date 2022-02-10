@@ -13,7 +13,7 @@ class ResourceHolder {
         void load(Identifier id, const std::string& filename);
 
         template <typename Parameter>
-        void load(Identifier id, const std::string* filename, const Parameter& secondParam);
+        void load(Identifier id, const std::string& filename, const Parameter& secondParam);
 
         Resource& get(Identifier id);
         const Resource& get(Identifier id) const;
@@ -33,7 +33,7 @@ void ResourceHolder<Resource, Identifier>::load(Identifier id, const std::string
 
 template<typename Resource, typename Identifier>
 template<typename Parameter>
-void ResourceHolder<Resource, Identifier>::load(Identifier id, const std::string* filename, const Parameter& secondParam) {
+void ResourceHolder<Resource, Identifier>::load(Identifier id, const std::string& filename, const Parameter& secondParam) {
     std::unique_ptr<Resource> resource(new Resource());
     if (!resource->loadFromFile(filename, secondParam))
         throw std::runtime_error("ResourceHolder::load - Failed to load " + filename);
