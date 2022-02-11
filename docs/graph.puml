@@ -150,4 +150,36 @@ class Container extends Component {
 Container --* MenuState
 Container --* SettingsState
 
+class Animation {
+    Enable make animation from image
+}
+
+Animation --* Aircraft
+
+class PostEffect {
+    Enable using shaders
+}
+
+class BloomEffect extends PostEffect {
+    Adding bloom shader/effect
+}
+
+BloomEffect --* World
+
+class Particle {
+    Containe information about single particle
+}
+
+class ParticleNode extends SceneNode {
+    Containe particles and draw it to world
+}
+
+Particle --* ParticleNode
+
+class EmitterNode extends SceneNode {
+    Make 'handle' where particle are made
+}
+
+ParticleNode <..> EmitterNode
+
 @enduml
