@@ -30,6 +30,13 @@ namespace Fonts {
     };
 }
 
+namespace Music {
+    enum ID {
+        MenuTheme,
+        MissionTheme,
+    };
+}
+
 template <typename Resource, typename Identifier>
 class ResourceHolder;
 
