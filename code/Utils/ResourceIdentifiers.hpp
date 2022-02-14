@@ -3,6 +3,7 @@
 #include "Utils/ResourceHolder.hpp"
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 namespace Textures {
     enum ID {
@@ -30,6 +31,17 @@ namespace Fonts {
     };
 }
 
+namespace SoundEffect {
+    enum ID {
+        AlliedGunfire,
+        EnemyGunfire,
+        Explosion1,
+        Explosion2,
+        LaunchMissile,
+        CollectPickup,
+        Button
+    };
+}
 namespace Music {
     enum ID {
         MenuTheme,
@@ -43,3 +55,4 @@ class ResourceHolder;
 typedef ResourceHolder<sf::Texture, Textures::ID> TextureHolder;
 typedef ResourceHolder<sf::Font, Fonts::ID> FontHolder;
 typedef ResourceHolder<sf::Shader, Shader::ID> ShaderHolder;
+typedef ResourceHolder<sf::SoundBuffer, SoundEffect::ID> SoundBufferHolder;
