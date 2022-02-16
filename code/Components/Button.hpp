@@ -20,7 +20,7 @@ class Button : public Component {
             ButtonCount
         };
     public:
-        Button(const FontHolder& fonts, const TextureHolder& textures);
+        Button(State::Context context);
         void setCallback(Callback callback);
         void setText(const std::string& text);
         void setToggle(bool flag);
@@ -38,10 +38,15 @@ class Button : public Component {
         sf::Sprite mSprite;
         sf::Text mText;
         bool mIsToggle;
+        SoundPlayer& mSounds;
 };
 
-Button::Button(const FontHolder& fonts, const TextureHolder& textures) 
-: mCallback(), mSprite(textures.get(Textures::Buttons)), mText("", fonts.get(Fonts::Sansation), 16), mIsToggle(false) {
+Button::Button(State::Context context) 
+: mCallback()
+, mSprite(context.textures->get(Textures::Buttons))
+, mText("", context.fonts->get(Fonts::Sansation), 16)
+, mIsToggle(false)
+, mSounds(*context.sounds) {
     changeTexture(Normal);
     sf::FloatRect bounds = mSprite.getLocalBounds();
     mText.setPosition(bounds.width / 2.f, bounds.height / 2.f);
@@ -85,6 +90,8 @@ void Button::activate() {
     if (!mIsToggle) {
         deactivate();
     }
+
+    mSounds.play(SoundEffect::Button);
 }
 
 void Button::deactivate() {

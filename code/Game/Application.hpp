@@ -23,18 +23,28 @@ class Application {
         TextureHolder mTextures;
         FontHolder mFonts;
         Player mPlayer;
+        MusicPlayer mMusic;
+        SoundPlayer mSounds;
         StateStack mStateStack;
 };
 
 Application::Application() 
-: mWindow(sf::VideoMode(1024, 768), "SFML - game", sf::Style::Close),
-mTextures(), mFonts(), mPlayer(), mStateStack(State::Context(mWindow, mTextures, mFonts, mPlayer)) {   
+: mWindow(sf::VideoMode(1024, 768), "SFML - game", sf::Style::Close)
+, mTextures()
+, mFonts()
+, mPlayer()
+, mStateStack(State::Context(mWindow, mTextures, mFonts, mPlayer, mMusic, mSounds)) {   
     mWindow.setKeyRepeatEnabled(false);
+    mWindow.setVerticalSyncEnabled(true);
+
     mFonts.load(Fonts::Sansation, "../assets/Sansation.ttf");
     mTextures.load(Textures::TitleScreen, "../assets/Textures/TitleScreen.png");
     mTextures.load(Textures::Buttons, "../assets/Textures/Buttons.png");
+
     registerStates();
     mStateStack.pushState(States::Title);
+
+    mMusic.setVolume(25.f);
 }
 
 void Application::run() {

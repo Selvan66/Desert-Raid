@@ -2,6 +2,8 @@
 
 #include "Utils/ResourceIdentifiers.hpp"
 #include "Game/Player.hpp"
+#include "Effects/MusicPlayer.hpp"
+#include "Effects/SoundEffect.hpp"
 
 #include "SFML/Graphics.hpp"
 #include "SFML/Window.hpp"
@@ -28,11 +30,14 @@ class State {
     public:
         typedef std::unique_ptr<State> Ptr;
         struct Context {
-            Context(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts, Player& player);
+            Context(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts, 
+            Player& player, MusicPlayer& music, SoundPlayer& sounds);
             sf::RenderWindow* window;
             TextureHolder* textures;
             FontHolder* fonts;
             Player* player;
+            MusicPlayer* music;
+            SoundPlayer* sounds;
         };
     public:
         State(StateStack& stack, Context context);
@@ -82,8 +87,9 @@ class StateStack : private sf::NonCopyable {
         std::map<States::ID, std::function<State::Ptr()>> mFactories;
 };
 
-State::Context::Context(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts, Player& player) 
-: window(&window), textures(&textures), fonts(&fonts), player(&player) {
+State::Context::Context(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts, 
+Player& player, MusicPlayer& music, SoundPlayer& sounds) 
+: window(&window), textures(&textures), fonts(&fonts), player(&player), music(&music), sounds(&sounds) {
 }
 
 State::State(StateStack& stack, Context context) 

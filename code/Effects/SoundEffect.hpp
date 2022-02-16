@@ -11,7 +11,7 @@ class SoundPlayer : private sf::NonCopyable {
     public:
         SoundPlayer();
         void play(SoundEffect::ID effect);
-        void play(SoundEffect::ID, sf::Vector2f position);
+        void play(SoundEffect::ID effect, sf::Vector2f position);
         void removeStoppedSounds();
         void setListenerPosition(sf::Vector2f position);
         sf::Vector2f getListenerPosition() const;
@@ -19,11 +19,16 @@ class SoundPlayer : private sf::NonCopyable {
         SoundBufferHolder mSoundBuffers;
         std::list<sf::Sound> mSounds;
 
-        static const float ListenerZ = 300.f;
-        static const float Attenuation = 8.f;
-        static const float MinDistance2D = 200.f;
-        static const float MinDistance3D = std::sqrt(MinDistance2D*MinDistance2D + ListenerZ*ListenerZ);
+        static const float ListenerZ;
+        static const float Attenuation;
+        static const float MinDistance2D;
+        static const float MinDistance3D;
 };
+
+const float SoundPlayer::ListenerZ = 300.f;
+const float SoundPlayer::Attenuation = 8.f;
+const float SoundPlayer::MinDistance2D = 200.f;
+const float SoundPlayer::MinDistance3D = std::sqrt(SoundPlayer::MinDistance2D*SoundPlayer::MinDistance2D + SoundPlayer::ListenerZ*SoundPlayer::ListenerZ);
 
 SoundPlayer::SoundPlayer()
 : mSoundBuffers()
@@ -43,7 +48,7 @@ void SoundPlayer::play(SoundEffect::ID effect) {
     play(effect, getListenerPosition());
 }
 
-void SoundPlayer::play(SoundEffect::ID, sf::Vector2f position) {
+void SoundPlayer::play(SoundEffect::ID effect, sf::Vector2f position) {
     mSounds.push_back(sf::Sound());
     sf::Sound& sound = mSounds.back();
 
