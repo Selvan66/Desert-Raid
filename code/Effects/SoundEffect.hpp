@@ -19,20 +19,19 @@ class SoundPlayer : private sf::NonCopyable {
         SoundBufferHolder mSoundBuffers;
         std::list<sf::Sound> mSounds;
 
-        static const float ListenerZ;
-        static const float Attenuation;
-        static const float MinDistance2D;
-        static const float MinDistance3D;
+        const float ListenerZ;
+        const float Attenuation;
+        const float MinDistance2D;
+        const float MinDistance3D;
 };
-
-const float SoundPlayer::ListenerZ = 300.f;
-const float SoundPlayer::Attenuation = 8.f;
-const float SoundPlayer::MinDistance2D = 200.f;
-const float SoundPlayer::MinDistance3D = std::sqrt(SoundPlayer::MinDistance2D*SoundPlayer::MinDistance2D + SoundPlayer::ListenerZ*SoundPlayer::ListenerZ);
 
 SoundPlayer::SoundPlayer()
 : mSoundBuffers()
-, mSounds() {
+, mSounds()
+, ListenerZ(300.f)
+, Attenuation(8.f)
+, MinDistance2D(200.f)
+, MinDistance3D(std::sqrt(SoundPlayer::MinDistance2D*SoundPlayer::MinDistance2D + SoundPlayer::ListenerZ*SoundPlayer::ListenerZ)) {
     mSoundBuffers.load(SoundEffect::AlliedGunfire, "../assets/Sound/AlliedGunfire.wav");
     mSoundBuffers.load(SoundEffect::EnemyGunfire, "../assets/Sound/EnemyGunfire.wav");
     mSoundBuffers.load(SoundEffect::Explosion1, "../assets/Sound/Explosion1.wav");

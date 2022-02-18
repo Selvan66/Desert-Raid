@@ -4,6 +4,7 @@
 #include "Utils/Utility.hpp"
 #include "Components/Button.hpp"
 #include "Components/Container.hpp"
+#include "Effects/MusicPlayer.hpp"
 
 class MenuState : public State {
     public:
@@ -46,6 +47,8 @@ MenuState::MenuState(StateStack& stack, Context context)
     mGUIContainer.pack(playButton);
     mGUIContainer.pack(settingsButton);
     mGUIContainer.pack(exitButton);
+
+    context.music->play(Music::MenuTheme);
 }
 
 void MenuState::draw() {

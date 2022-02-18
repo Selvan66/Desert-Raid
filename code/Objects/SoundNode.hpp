@@ -24,5 +24,5 @@ void SoundNode::playSound(SoundEffect::ID sound, sf::Vector2f position) {
 }
 
 unsigned int SoundNode::getCategory() const {
-    return Categoty::SoundEffect;
+    return Category::SoundEffect;
 }

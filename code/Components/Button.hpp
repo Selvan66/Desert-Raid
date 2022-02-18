@@ -1,11 +1,11 @@
 #pragma once
 
 #include "Components/Component.hpp"
+#include "Effects/SoundEffect.hpp"
 #include "Utils/ResourceIdentifiers.hpp"
 #include "Utils/Utility.hpp"
 
 #include <functional>
-
 
 namespace GUI {
 class Button : public Component {

@@ -15,7 +15,7 @@
 
 class World : private sf::NonCopyable {
     public:
-        explicit World(sf::RenderTarget& outputTarget, FontHolder& fonts);
+        explicit World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sounds);
         void update(sf::Time dt);
         void draw();
         CommandQueue& getCommandQueue();
@@ -26,6 +26,7 @@ class World : private sf::NonCopyable {
         void adaptPlayerPosition();
         void adaptPlayerVelocity();
         void handleCollisions();
+        void updateSounds();
         void buildScene();
         void addEnemies();
         void addEnemy(Aircraft::Type type, float relX, float relY);
@@ -57,6 +58,7 @@ class World : private sf::NonCopyable {
         sf::View mWorldView;
         TextureHolder mTextures;
         FontHolder& mFonts;
+        SoundPlayer& mSounds;
         SceneNode mSceneGraph;
         std::array<SceneNode*, LayerCount> mSceneLayers;
         CommandQueue mCommandQueue;
@@ -69,12 +71,13 @@ class World : private sf::NonCopyable {
         BloomEffect mBloomEffect;
 };
 
-World::World(sf::RenderTarget& outputTarget, FontHolder& fonts) 
+World::World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sounds) 
 : mTarget(outputTarget), 
 mSceneTexture(),
 mWorldView(outputTarget.getDefaultView()), 
 mTextures(), 
-mFonts(fonts), 
+mFonts(fonts),
+mSounds(sounds),
 mSceneGraph(), 
 mSceneLayers(),
 mWorldBounds(0.f, 0.f, mWorldView.getSize().x, 5000.f), 
@@ -105,6 +108,8 @@ void World::update(sf::Time dt) {
     spawnEnemies();
     mSceneGraph.update(dt, mCommandQueue);
     adaptPlayerPosition();
+
+    updateSounds();
 }
 
 void World::draw() {
@@ -195,6 +200,7 @@ void World::handleCollisions() {
 
             pickup.apply(player);
             pickup.destroy();
+            player.playLocalSound(mCommandQueue, SoundEffect::CollectPickup);
         }
         else if (matchesCategories(pair, Category::EnemyAircraft, Category::AlliedProjectile)
 			  || matchesCategories(pair, Category::PlayerAircraft, Category::EnemyProjectile)) {
@@ -205,6 +211,11 @@ void World::handleCollisions() {
             projectile.destroy();
         }
     }
+}
+
+void World::updateSounds() {
+    mSounds.setListenerPosition(mPlayerAircraft->getWorldPosition());
+    mSounds.removeStoppedSounds();
 }
 
 void World::buildScene() {
@@ -238,6 +249,8 @@ void World::buildScene() {
     std::unique_ptr<ParticleNode> propellantNode(new ParticleNode(Particle::Propellant, mTextures));
     mSceneLayers[LowerAir]->attachChild(std::move(propellantNode));
 
+    std::unique_ptr<SoundNode> soundNode(new SoundNode(mSounds));
+    mSceneGraph.attachChild(std::move(soundNode));
 
 	std::unique_ptr<Aircraft> player(new Aircraft(Aircraft::Eagle, mTextures, mFonts));
 	mPlayerAircraft = player.get();
