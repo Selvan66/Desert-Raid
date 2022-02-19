@@ -182,4 +182,10 @@ class EmitterNode extends SceneNode {
 
 ParticleNode <..> EmitterNode
 
+class MusicPlayer {
+    Play looped music
+}
+
+MusicPlayer --* Context
+
 @enduml
